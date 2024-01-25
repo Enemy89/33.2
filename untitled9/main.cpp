@@ -4,13 +4,13 @@
 class Fish {
 public:
     Fish() {}
-    ~Fish() {std::cout << "Clear fish" << std::endl;}
+    //~Fish() {std::cout << "Clear fish" << std::endl;}
 };
 
 class Boot {
 public:
     Boot() {}
-    ~Boot() {std::cout << "Clear boot" << std::endl;}
+    //~Boot() {std::cout << "Clear boot" << std::endl;}
 };
 
 class Sector {
