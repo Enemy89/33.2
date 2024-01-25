@@ -4,28 +4,36 @@
 class Fish {
 public:
     Fish() {}
-    ~Fish() {}
+    ~Fish() {std::cout << "Clear fish" << std::endl;}
 };
 
 class Boot {
 public:
     Boot() {}
-    ~Boot() {}
+    ~Boot() {std::cout << "Clear boot" << std::endl;}
 };
 
 class Sector {
 public:
     Fish* fish;
     Boot* boot;
+    bool fishCreated;
+    bool bootCreated;
 
-    Sector() : fish(nullptr), boot(nullptr) {}
+    Sector() : fish(nullptr), boot(nullptr), fishCreated(false), bootCreated(false) {}
 
     void placeFish() {
-        fish = new Fish();
+        if (!fishCreated) {
+            fish = new Fish();
+            fishCreated = true;
+        }
     }
 
     void placeBoot() {
-        boot = new Boot();
+        if (!bootCreated) {
+            boot = new Boot();
+            bootCreated = true;
+        }
     }
 
     bool isFishCaught() const {
@@ -35,9 +43,16 @@ public:
     bool hasBoot() const {
         return (boot != nullptr);
     }
+
     ~Sector() {
-        delete fish;
-        delete boot;
+        if (fishCreated) {
+            delete fish;
+            std::cout << "Clear fish" << std::endl;
+        }
+        if (bootCreated) {
+            delete boot;
+            std::cout << "Clear boot" << std::endl;
+        }
     }
 };
 
@@ -75,22 +90,29 @@ public:
                 std::cout << "You've caught a shoe. The game is over." << std::endl;
                 return;
             }
-        } while (true);
+        } while (attempts < 9 && !field[sectorIndex].isFishCaught());
     }
 
     ~FishingGame() {
         for (int i = 0; i < 9; ++i) {
             delete field[i].fish;
             delete field[i].boot;
+            std::cout << "Clear sector " << i << std::endl;
         }
     }
 
 private:
     void checkSector(int sectorIndex) {
         if (field[sectorIndex].isFishCaught()) {
-            throw Fish();
+            if (field[sectorIndex].fishCreated) {
+                field[sectorIndex].fishCreated = false;
+                throw Fish();
+            }
         } else if (field[sectorIndex].hasBoot()) {
-            throw Boot();
+            if (field[sectorIndex].bootCreated) {
+                field[sectorIndex].bootCreated = false;
+                throw Boot();
+            }
         }
     }
 };
