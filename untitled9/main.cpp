@@ -46,12 +46,16 @@ public:
 
     ~Sector() {
         if (fishCreated) {
-            delete fish;
-            std::cout << "Clear fish" << std::endl;
+            if (fish != nullptr) {
+                delete fish;
+                std::cout << "Clear fish" << std::endl;
+            }
         }
         if (bootCreated) {
-            delete boot;
-            std::cout << "Clear boot" << std::endl;
+            if (boot != nullptr) {
+                delete boot;
+                std::cout << "Clear boot" << std::endl;
+            }
         }
     }
 };
@@ -76,9 +80,15 @@ public:
 
     void play() {
         int sectorIndex;
+
         do {
             std::cout << "Enter the sector number for casting the rod (0-8): ";
             std::cin >> sectorIndex;
+
+            if (std::cin.fail() || sectorIndex < 0 || sectorIndex >= 9) {
+                std::cout << "Invalid input. Please enter a number between 0 and 8." << std::endl;
+                break;
+            }
 
             try {
                 checkSector(sectorIndex);
@@ -90,13 +100,18 @@ public:
                 std::cout << "You've caught a shoe. The game is over." << std::endl;
                 return;
             }
+
         } while (attempts < 9 && !field[sectorIndex].isFishCaught());
     }
 
     ~FishingGame() {
         for (int i = 0; i < 9; ++i) {
-            delete field[i].fish;
-            delete field[i].boot;
+            if (field[i].fish != nullptr) {
+                delete field[i].fish;
+            }
+            if (field[i].boot != nullptr) {
+                delete field[i].boot;
+            }
             std::cout << "Clear sector " << i << std::endl;
         }
     }
