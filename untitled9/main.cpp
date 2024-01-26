@@ -43,21 +43,6 @@ public:
     bool hasBoot() const {
         return (boot != nullptr);
     }
-
-    ~Sector() {
-        if (fishCreated) {
-            if (fish != nullptr) {
-                delete fish;
-                std::cout << "Clear fish" << std::endl;
-            }
-        }
-        if (bootCreated) {
-            if (boot != nullptr) {
-                delete boot;
-                std::cout << "Clear boot" << std::endl;
-            }
-        }
-    }
 };
 
 class FishingGame {
